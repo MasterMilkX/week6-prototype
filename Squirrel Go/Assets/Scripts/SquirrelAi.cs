@@ -6,6 +6,10 @@ public class SquirrelAi : MonoBehaviour
 {
 	//features of the squirrel extracted from the CSV dataset
 	public string color;				//cinnamon, gray, black
+    public string id;
+    public string age;  //only adult/juvenile?
+    public string behaviors; //tail twitches etc
+
 	public string playerBehavior;		//runs from, indifferent, approaches
 	public string defaultBehavior;		//running, chasing, foraging, eating, climbing
 	public string noise;				//moans, quaas, kuks
@@ -66,7 +70,7 @@ public class SquirrelAi : MonoBehaviour
         else if(curBehavior == "runs from" && player != null){
         	Vector3 dir = transform.position - player.position;
      		transform.Translate(dir.normalized * run_speed * Time.deltaTime);
-     		Debug.Log("oh fuck!");
+     		//Debug.Log("oh fuck!");
 
      		SetDirection(dir);
         }
@@ -76,7 +80,7 @@ public class SquirrelAi : MonoBehaviour
         	if(Vector2.Distance(transform.position, curTarget) > 2.0f){
         		GoToTarget(def_speed);
         	}
-        	Debug.Log("???");
+        	//Debug.Log("???");
 
         	SetDirection(curTarget);
         }else if(curBehavior == "get acorn"){

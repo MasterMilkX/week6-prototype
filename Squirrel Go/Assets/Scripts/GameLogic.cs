@@ -41,6 +41,17 @@ public class GameLogic : MonoBehaviour
 			newsquirrel.RotateAround(new Vector3(0, 0, 0), new Vector3(0,0,1), 37);	//this rotation is arbitrary and can be tuned later
 
 			newsquirrel.rotation = Quaternion.identity;
+
+			//shove variables into squirrel
+			newsquirrel.gameObject.GetComponent<SquirrelAi>().color = (string)data[i]["Primary Fur Color"];
+			newsquirrel.gameObject.GetComponent<SquirrelAi>().id = (string)data[i]["Unique Squirrel ID"];
+			newsquirrel.gameObject.GetComponent<SquirrelAi>().age = (string)data[i]["Age"];
+
+			print(newsquirrel.gameObject.GetComponent<SquirrelAi>().age);
+			//newsquirrel.gameObject.GetComponent<SquirrelAi>().color = (string)data[i]["color"];
+			//newsquirrel.gameObject.GetComponent<SquirrelAi>().color = (string)data[i]["color"];
+
+
 			/*
 			print("X " + data[i]["X"] + " " +
 					"Y " + data[i]["Y"] + " " +
