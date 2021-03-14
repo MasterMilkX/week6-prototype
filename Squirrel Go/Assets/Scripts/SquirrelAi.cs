@@ -6,7 +6,6 @@ public class SquirrelAi : MonoBehaviour
 {
 	//features of the squirrel extracted from the CSV dataset
 	public string color;				//cinnamon, gray, black
-	public string age;					//adult, juvenile, ???
 	public string playerBehavior;		//runs from, indifferent, approaches
 	public string defaultBehavior;		//running, chasing, foraging, eating, climbing
 	public string noise;				//moans, quaas, kuks

@@ -14,12 +14,10 @@ public class Player : MonoBehaviour
     //[SerializeField] private Transform bullet;
 
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float currentHealth;
 
     void Awake()
     {
         moveSpeed = 6f;
-        currentHealth = 100f;
         rb = GetComponent<Rigidbody2D>();
         gameLogic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
     }
@@ -49,37 +47,8 @@ public class Player : MonoBehaviour
 
         Vector3 cameraPos = transform.position;
 
-        mainCamera.transform.position = new Vector3(cameraPos.x, cameraPos.y, -10f);
+        mainCamera.transform.position = new Vector3(cameraPos.x, cameraPos.y-10.0f, -10f);
 
     }
-    /*
-    void FireAt(Vector3 direction)
-    {
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        Transform p = Instantiate(bullet, transform.position + 0.2f * direction, Quaternion.AngleAxis(angle, Vector3.forward));
-        p.GetComponent<Bullet>().Setup(20f, 20f, 1f, direction);
-        p.gameObject.tag = "bullet";
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("treasureFake"))
-        {
-            Destroy(other.gameObject);
-        }
-        else if (other.gameObject.CompareTag("treasureReal"))
-        {
-            gameLogic.currState = GameLogic.GameState.GAME_WON;
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("enemy"))
-        {
-            gameLogic.currState = GameLogic.GameState.GAME_LOST;
-        }
-    }
-    */
+    
 }
