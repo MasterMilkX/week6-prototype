@@ -244,7 +244,6 @@ MonoBehaviour:
   gameLogic: {fileID: 764790774}
   rb: {fileID: 61660726}
   movement: {x: 0, y: 0}
-  bullet: {fileID: 0}
   moveSpeed: 5
   currentHealth: 0
 --- !u!1 &519420028
@@ -373,3 +372,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b40856054c8e7944b7ff4996fbefd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  file: squirrel_census
+  squirrel: {fileID: 5548011589969745554, guid: ee222dcb95245c34181714d3c7a6d7c0, type: 3}

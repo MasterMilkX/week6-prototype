@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
         moveSpeed = 6f;
         currentHealth = 100f;
         rb = GetComponent<Rigidbody2D>();
-        //gameLogic = GameObject.Find("Game Logic").GetComponent<GameLogic>();
+        gameLogic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
     }
 
     // Update is called once per frame
