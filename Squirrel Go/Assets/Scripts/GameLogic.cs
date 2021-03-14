@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class GameLogic : MonoBehaviour
 	//we can rotate the map if time idk
 
 	[SerializeField] private Transform squirrel;
+
+	//ui
+	public int acornCt = 100;
+	public Text acornTxt;
 
 	void Awake()
 	{
@@ -59,5 +64,10 @@ public class GameLogic : MonoBehaviour
 	void Update()
 	{
 
+	}
+
+	public void DecreaseAcorns(){
+		acornCt--;
+		acornTxt.text = "x" + acornCt.ToString();
 	}
 }

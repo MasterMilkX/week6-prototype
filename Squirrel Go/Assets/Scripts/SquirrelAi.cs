@@ -81,7 +81,7 @@ public class SquirrelAi : MonoBehaviour
     void SetRandomPos(float distance){
     	float angle = Random.Range(0.0f,359.0f) * ((float)Mathf.PI/180.0f);
     	curTarget = new Vector2(distance * Mathf.Cos(angle), distance * Mathf.Sin(angle));
-    	Debug.Log("Going to: " + curTarget);
+    	//Debug.Log("Going to: " + curTarget);
     }
 
     //goto new location after set wait time
