@@ -73,8 +73,7 @@ public class Player : MonoBehaviour
     void ThrowAcorn(Vector2 target){
         float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
         GameObject p = Instantiate(acornPrefab, new Vector2(transform.position.x,transform.position.y) + 1f * target, Quaternion.identity);
-        float thrust = Vector2.Distance(transform.position,target)*50.0f;
-        p.GetComponent<Rigidbody2D>().AddForce(p.transform.forward*thrust,ForceMode2D.Impulse);
+        p.GetComponent<Rigidbody2D>().AddForce(target*10.0f,ForceMode2D.Impulse);
         gameLogic.DecreaseAcorns();
     }
 }

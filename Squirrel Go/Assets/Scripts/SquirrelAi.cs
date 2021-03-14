@@ -13,6 +13,7 @@ public class SquirrelAi : MonoBehaviour
 
 	//game specific stats
 	private Transform player;				//keep track of player for their position
+    private GameObject acorn;
 	private Vector2 position;
 	public float def_speed = 1.5f;			//movement speed when not running
 	public float run_speed = 3.0f;			//max running speed
@@ -22,6 +23,9 @@ public class SquirrelAi : MonoBehaviour
 	private string curBehavior = "default";		//current acting behavior of the squirrel
 
 	private SpriteRenderer sprRend;
+    public Sprite running;
+    public Sprite upright;
+    public bool eating = false;
 
 
     // Start is called before the first frame update
@@ -35,6 +39,7 @@ public class SquirrelAi : MonoBehaviour
     void Update()
     {
     	SelectBehavior();
+        SetSprite();
     }
 
 
@@ -74,6 +79,19 @@ public class SquirrelAi : MonoBehaviour
         	Debug.Log("???");
 
         	SetDirection(curTarget);
+        }else if(curBehavior == "get acorn"){
+            if(acorn == null){
+                curBehavior = "default";
+            }
+            curTarget = acorn.transform.position;
+            if(Vector2.Distance(transform.position, curTarget) > 0.001f){
+                GoToTarget(run_speed);
+            }
+            //goto new position
+            else if(!eating){
+                StartCoroutine(Eat());
+            }
+            SetDirection(curTarget);
         }
     }
 
@@ -101,10 +119,18 @@ public class SquirrelAi : MonoBehaviour
     //set direction based on target
     void SetDirection(Vector2 t){
     	if(t.x > transform.position.x && !sprRend.flipX){
-    		sprRend.flipX = true;
-    	}else if(t.x < transform.position.x && sprRend.flipX){
     		sprRend.flipX = false;
+    	}else if(t.x < transform.position.x && sprRend.flipX){
+    		sprRend.flipX = true;
     	}
+    }
+
+    void SetSprite(){
+        if(eating){
+            sprRend.sprite = upright;
+        }else{
+            sprRend.sprite = running;
+        }
     }
 
 
@@ -112,10 +138,13 @@ public class SquirrelAi : MonoBehaviour
 
     //radar detection
     void OnTriggerEnter2D(Collider2D c){
-    	if(c.transform.tag == "Player"){
+    	if(c.transform.tag == "Player" && acorn == null && !eating){
     		player = c.transform;
     		curBehavior = playerBehavior;
-    	}
+    	}else if(c.transform.tag == "acorn" && acorn == null && !eating){
+            acorn = c.gameObject;
+            curBehavior = "get acorn";
+        }
     }
     void OnTriggerExit2D(Collider2D c){
     	if(c.transform.tag == "Player"){
@@ -123,5 +152,15 @@ public class SquirrelAi : MonoBehaviour
     		curBehavior = "default";
     		StartCoroutine(NewLocation(2.0f));
     	}
+    }
+
+    //eat the acorn
+    IEnumerator Eat(){
+        eating = true;
+        Destroy(acorn.gameObject);
+        acorn = null;
+        yield return new WaitForSeconds(3);
+        eating = false;
+        curBehavior = "default";
     }
 }
