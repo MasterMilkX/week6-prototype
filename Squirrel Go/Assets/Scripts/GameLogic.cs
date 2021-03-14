@@ -25,13 +25,17 @@ public class GameLogic : MonoBehaviour
 
 		List<Dictionary<string, object>> data = CSVReader.Read(file); //read map values
 
+		Transform newsquirrel;
 
 		for (var i = 0; i < data.Count; i+=20)	//currently this spawns every 20 squirrel since i tried spawning them in at once and that was a huge mistake
 		{
 			Vector3 pos = new Vector3( ( (float) data[i]["X"] - TRANSLATEX) * SCALE, ((float) data[i]["Y"] - TRANSLATEY) * SCALE, 0);	//get position of squirrel
 
-			Instantiate(squirrel, pos, Quaternion.identity);//draw a squirrel in each place
+			newsquirrel = Instantiate(squirrel, pos, Quaternion.identity);//draw a squirrel in each place
 
+			newsquirrel.RotateAround(new Vector3(0, 0, 0), new Vector3(0,0,1), 37);	//this rotation is arbitrary and can be tuned later
+
+			newsquirrel.rotation = Quaternion.identity;
 			/*
 			print("X " + data[i]["X"] + " " +
 					"Y " + data[i]["Y"] + " " +
