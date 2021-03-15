@@ -18,11 +18,22 @@ public class Player : MonoBehaviour
     //acorn and camera movement
     public GameObject acornPrefab;
 
+
+    //picture mode
+    public bool picMode = false;
+    public GameObject snapRing;
+    public SnapRing srScript;
+
     void Awake()
     {
         moveSpeed = 6f;
         rb = GetComponent<Rigidbody2D>();
         gameLogic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
+
+        if(snapRing){
+            srScript = snapRing.GetComponent<SnapRing>();
+            snapRing.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -47,15 +58,39 @@ public class Player : MonoBehaviour
             movement.y = -1;
         }
 
-
-
         Vector2 mousePos = Input.mousePosition;
         Vector2 targetPos = mainCamera.ScreenToWorldPoint(mousePos);
+
+
+        //take pic and add to gallery
+        if(Input.GetMouseButtonUp(0) && srScript.Hit() && srScript.squirrel != null && srScript.squirrel.GetComponent<SquirrelAi>().eating){
+            //Debug.Log("Click!");
+            //Debug.Log(srScript.squirrel.GetComponent<SquirrelAi>().id);
+            SquirrelAi sqai = srScript.squirrel.GetComponent<SquirrelAi>();
+            gameLogic.AddSquirrel(sqai.id,sqai.color,sqai.defaultBehavior,sqai.noise,sqai.playerBehavior,"likes acorns");
+        }
+
+        //show snap ring
+        if(Input.GetMouseButton(0)){
+            picMode = true;
+            snapRing.SetActive(true);
+            snapRing.transform.position = new Vector3(targetPos.x,targetPos.y,0);
+        }else{
+            if(picMode){
+                picMode = false;
+                snapRing.SetActive(false);
+                srScript.curSize = 2.0f;
+            }
+           
+        }
+
+
+        
 
         Vector2 direction = (targetPos - (Vector2)transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1) && gameLogic.acornCt > 0)
             ThrowAcorn(direction);
 
         Vector2 changePos = movement * moveSpeed * Time.deltaTime;

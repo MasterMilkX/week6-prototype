@@ -5,14 +5,14 @@ using UnityEngine;
 public class SquirrelAi : MonoBehaviour
 {
 	//features of the squirrel extracted from the CSV dataset
-	public string color;				//cinnamon, gray, black
-    public string id;
-    public string age;  //only adult/juvenile?
-    public string behaviors; //tail twitches etc
+	public string color = "cinammon";				//cinnamon, gray, black
+    public string id = "??";
+    public string age = "??";  //only adult/juvenile?
+    public string behaviors = "??"; //tail twitches etc
 
-	public string playerBehavior;		//runs from, indifferent, approaches
-	public string defaultBehavior;		//running, chasing, foraging, eating, climbing
-	public string noise;				//moans, quaas, kuks
+	public string playerBehavior = "indifferent"; 		//runs from, indifferent, approaches
+	public string defaultBehavior = "running";		//running, chasing, foraging, eating, climbing
+	public string noise = "kuks";				//moans, quaas, kuks
 
 
 	//game specific stats
@@ -52,7 +52,7 @@ public class SquirrelAi : MonoBehaviour
     //decision-making of the ai 
     void SelectBehavior(){
     	//basic movement ai
-        if(curBehavior == "default" || curBehavior == "indifferent"){
+        if((curBehavior == "default" || curBehavior == "indifferent") && !eating){
         	//goto target
         	if(Vector2.Distance(transform.position, curTarget) > 0.001f){
         		GoToTarget(def_speed);
@@ -86,13 +86,16 @@ public class SquirrelAi : MonoBehaviour
         }else if(curBehavior == "get acorn"){
             if(acorn == null){
                 curBehavior = "default";
+                return;
             }
             curTarget = acorn.transform.position;
             if(Vector2.Distance(transform.position, curTarget) > 0.001f){
                 GoToTarget(run_speed);
+                //Debug.Log("LET'S GET THIS BREAD");
             }
             //goto new position
             else if(!eating){
+                //Debug.Log("i got it! yas bitches!");
                 StartCoroutine(Eat());
             }
             SetDirection(curTarget);
@@ -102,7 +105,7 @@ public class SquirrelAi : MonoBehaviour
     //makes squirrel move to a random position within some radial distance away
     void SetRandomPos(float distance){
     	float angle = Random.Range(0.0f,359.0f) * ((float)Mathf.PI/180.0f);
-    	curTarget = new Vector2(distance * Mathf.Cos(angle), distance * Mathf.Sin(angle));
+    	curTarget = (Vector2)(transform.position + new Vector3(distance * Mathf.Cos(angle), distance * Mathf.Sin(angle),0));
     	//Debug.Log("Going to: " + curTarget);
     }
 
@@ -122,9 +125,9 @@ public class SquirrelAi : MonoBehaviour
 
     //set direction based on target
     void SetDirection(Vector2 t){
-    	if(t.x > transform.position.x && !sprRend.flipX){
+    	if(t.x > transform.position.x && sprRend.flipX){
     		sprRend.flipX = false;
-    	}else if(t.x < transform.position.x && sprRend.flipX){
+    	}else if(t.x < transform.position.x && !sprRend.flipX){
     		sprRend.flipX = true;
     	}
     }
@@ -145,16 +148,20 @@ public class SquirrelAi : MonoBehaviour
     	if(c.transform.tag == "Player" && acorn == null && !eating){
     		player = c.transform;
     		curBehavior = playerBehavior;
-    	}else if(c.transform.tag == "acorn" && acorn == null && !eating){
+    	}else if(c.transform.tag == "acorn" && acorn == null && !eating && c.transform.GetComponent<Acorn>().claimedSquirrel == null){
             acorn = c.gameObject;
             curBehavior = "get acorn";
+            c.transform.GetComponent<Acorn>().claimedSquirrel = this.transform;
         }
     }
     void OnTriggerExit2D(Collider2D c){
     	if(c.transform.tag == "Player"){
     		player = null;
-    		curBehavior = "default";
-    		StartCoroutine(NewLocation(2.0f));
+            if(curBehavior == playerBehavior && !eating){
+                curBehavior = "default";
+                StartCoroutine(NewLocation(2.0f));
+            }
+    		
     	}
     }
 
@@ -166,5 +173,16 @@ public class SquirrelAi : MonoBehaviour
         yield return new WaitForSeconds(3);
         eating = false;
         curBehavior = "default";
+        SetRandomPos(Random.Range(3.0f,7.0f));
+    }
+
+    //set speed of the squirrel based on age
+    public void SetAgeSpeed(){
+        if(age == "Juvenile"){
+            def_speed = 3.0f;
+            run_speed = 5f;
+        }
     }
 }
+
+

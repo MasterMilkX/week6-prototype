@@ -21,9 +21,17 @@ public class GameLogic : MonoBehaviour
 
 	[SerializeField] private Transform squirrel;
 
-	//ui
+	public GameObject squirrel_cinammon;
+	public GameObject squirrel_black;
+	public GameObject squirrel_gray;
+
+	//acorns
 	public int acornCt = 100;
 	public Text acornTxt;
+
+	//gallery
+	public List<Dictionary<string,string>> squirrelSet = new List<Dictionary<string,string>>(); 
+	public GameObject infoScreen;
 
 	System.Random random = new System.Random();
 
@@ -31,29 +39,42 @@ public class GameLogic : MonoBehaviour
 	{
 		List<Dictionary<string, object>> data = CSVReader.Read(file); //read map values
 
-		Transform newsquirrel;
+		GameObject newsquirrel;
 
 		for (var i = 0; i < data.Count; i+=20)	//currently this just spawns every 20th squirrel since i tried spawning them in at once and that was a huge mistake
 		{
 
 			Vector3 pos = new Vector3( ( (float) data[i]["X"] - TRANSLATEX) * SCALE, ((float) data[i]["Y"] - TRANSLATEY) * SCALE, 0);	//get position of squirrel and transform
 
-			newsquirrel = Instantiate(squirrel, pos, Quaternion.identity);//draw a squirrel in each place
+			string squirrelColor = (string)data[i]["Primary Fur Color"];
+			GameObject sq = null;
+			if(squirrelColor == "Gray"){
+				sq = squirrel_gray;
+			}else if(squirrelColor == "Black"){
+				sq = squirrel_black;
+			}else{
+				sq = squirrel_cinammon;
+			}
 
-			newsquirrel.RotateAround(new Vector3(0, 0, 0), new Vector3(0,0,1), 37);	//this rotation is arbitrary and can be tuned later
-			newsquirrel.rotation = Quaternion.identity;
+
+			newsquirrel = Instantiate(sq, pos, Quaternion.identity);//draw a squirrel in each place
+
+			newsquirrel.transform.RotateAround(new Vector3(0, 0, 0), new Vector3(0,0,1), 37);	//this rotation is arbitrary and can be tuned later
+			newsquirrel.transform.rotation = Quaternion.identity;
 
 			//shove variables into squirrel
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().color = (string)data[i]["Primary Fur Color"];
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().id = (string)data[i]["Unique Squirrel ID"];
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().age = (string)data[i]["Age"];
+			SquirrelAi sqAI = newsquirrel.GetComponent<SquirrelAi>();
+			sqAI.color = squirrelColor;
+			sqAI.id = (string)data[i]["Unique Squirrel ID"];
+			sqAI.age = (string)data[i]["Age"];
+			sqAI.SetAgeSpeed();
 
 			//nightmare of data structures
 			Dictionary<string, object> temp = new Dictionary<string, object>();
 			temp.Add("Kuks", data[i]["Kuks"]);
 			temp.Add("Quaas", data[i]["Quaas"]);
 			temp.Add("Moans", data[i]["Moans"]);
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().noise = pickRandomTrue(temp);
+			sqAI.noise = pickRandomTrue(temp).ToLower();
 
 			temp = new Dictionary<string, object>();
 			//Running,Chasing,Climbing,Eating,Foraging
@@ -62,20 +83,20 @@ public class GameLogic : MonoBehaviour
 			temp.Add("Climbing", data[i]["Climbing"]);
 			temp.Add("Eating", data[i]["Eating"]);
 			temp.Add("Foraging", data[i]["Foraging"]);
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().defaultBehavior = pickRandomTrue(temp);
+			sqAI.defaultBehavior = pickRandomTrue(temp).ToLower();
 
 			temp = new Dictionary<string, object>();
 			//Runs from, indifferent, approaches
 			temp.Add("Runs from", data[i]["Runs from"]);
 			temp.Add("Approaches", data[i]["Approaches"]);
 			temp.Add("Indifferent", data[i]["Indifferent"]);
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().playerBehavior = pickRandomTrue(temp);
+			sqAI.playerBehavior = pickRandomTrue(temp).ToLower();
 
 			temp = new Dictionary<string, object>();
 			//probably extra lol [tail twitches/flags]
 			temp.Add("Tail flags", data[i]["Tail flags"]);
 			temp.Add("Tail twitches", data[i]["Tail twitches"]);
-			newsquirrel.gameObject.GetComponent<SquirrelAi>().behaviors = pickRandomTrue(temp);
+			sqAI.behaviors = pickRandomTrue(temp).ToLower();
 
 			/*
 			print("X " + data[i]["X"] + " " +
@@ -104,7 +125,7 @@ public class GameLogic : MonoBehaviour
 		if (truevals.Count < 1) return "";
 		else {
 			string randval = (string)truevals[random.Next(0, truevals.Count)];
-			Debug.Log(randval);
+			//Debug.Log(randval);
 			return randval;
 		} 
 	}
@@ -112,6 +133,7 @@ public class GameLogic : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		infoScreen.SetActive(false);
 	}
 
 	// Update is called once per frame
@@ -124,4 +146,30 @@ public class GameLogic : MonoBehaviour
 		acornCt--;
 		acornTxt.text = "x" + acornCt.ToString();
 	}
+
+	//adds squirrel to the dictionary set
+	public void AddSquirrel(string id, string color, string activity, string noise, string humans, string funfact){
+		Dictionary<string,string> sq = new Dictionary<string,string>();
+		sq.Add("id", id);
+		sq.Add("color", color);
+		sq.Add("fav_activity", activity);
+		sq.Add("noise", noise);
+		sq.Add("humans", humans);
+		sq.Add("fun_fact", funfact);
+
+		squirrelSet.Add(sq);
+		Debug.Log(squirrelSet.Count);
+	}
+
+	public void NewGalleryEntry(){
+
+	}
+
+	public void ShowGalleryEntry(int entry){
+		infoScreen.SetActive(true);
+	}
+	public void HideGalleryEntry(){
+		infoScreen.SetActive(false);
+	}
+
 }
