@@ -10,7 +10,7 @@ public class SquirrelAi : MonoBehaviour
     public string age = "??";  //only adult/juvenile?
     public string behaviors = "??"; //tail twitches etc
 
-	public string playerBehavior = "indifferent"; 		//runs from, indifferent, approaches
+	public string playerBehavior = "indifferent"; 	//runs from, indifferent, approaches
 	public string defaultBehavior = "running";		//running, chasing, foraging, eating, climbing
 	public string noise = "kuks";				//moans, quaas, kuks
 
@@ -44,6 +44,9 @@ public class SquirrelAi : MonoBehaviour
     {
     	SelectBehavior();
         SetSprite();
+        if(playerBehavior == ""){
+            playerBehavior = "indifferent";
+        }
     }
 
 
@@ -52,7 +55,7 @@ public class SquirrelAi : MonoBehaviour
     //decision-making of the ai 
     void SelectBehavior(){
     	//basic movement ai
-        if((curBehavior == "default" || curBehavior == "indifferent") && !eating){
+        if((curBehavior == "default" || curBehavior == "indifferent" || curBehavior == "") && !eating){
         	//goto target
         	if(Vector2.Distance(transform.position, curTarget) > 0.001f){
         		GoToTarget(def_speed);

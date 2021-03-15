@@ -32,6 +32,7 @@ public class GameLogic : MonoBehaviour
 	//gallery
 	public List<Dictionary<string,string>> squirrelSet = new List<Dictionary<string,string>>(); 
 	public GameObject infoScreen;
+	public List<string> savedSquirrels = new List<string>();
 
 	System.Random random = new System.Random();
 
@@ -148,7 +149,14 @@ public class GameLogic : MonoBehaviour
 	}
 
 	//adds squirrel to the dictionary set
-	public void AddSquirrel(string id, string color, string activity, string noise, string humans, string funfact){
+	public void AddSquirrel(string id, string color, string activity, string noise, string humans, string funfact, Sprite sprite){
+		//already saved
+		if(savedSquirrels.Contains(id)){
+			return;
+		}
+
+		savedSquirrels.Add(id);
+
 		Dictionary<string,string> sq = new Dictionary<string,string>();
 		sq.Add("id", id);
 		sq.Add("color", color);
@@ -159,15 +167,32 @@ public class GameLogic : MonoBehaviour
 
 		squirrelSet.Add(sq);
 		Debug.Log(squirrelSet.Count);
+
+		if(squirrelSet.Count < 10){
+			GameObject.Find("Pic" + squirrelSet.Count).GetComponent<Image>().sprite = sprite;
+		}
 	}
 
-	public void NewGalleryEntry(){
-
-	}
-
+	//show the entry 
 	public void ShowGalleryEntry(int entry){
+		if(entry > squirrelSet.Count){
+			return;
+		}
+
+		//populate entry
+		Dictionary<string,string> sq = squirrelSet[entry-1];
+
+		infoScreen.transform.Find("ID").GetComponent<Text>().text = sq["id"];
+		infoScreen.transform.Find("Pic").GetComponent<Image>().sprite = GameObject.Find("Pic" + entry).GetComponent<Image>().sprite;
+		infoScreen.transform.Find("Activity").GetComponent<Text>().text = "Fave Activity: " + sq["fav_activity"];
+		infoScreen.transform.Find("Noise").GetComponent<Text>().text = "Noise: " + sq["id"];
+		infoScreen.transform.Find("Humans").GetComponent<Text>().text = "Humans: " + sq["humans"];
+		infoScreen.transform.Find("Fun Fact").GetComponent<Text>().text = "Fun Fact: " + sq["fun_fact"];
+
 		infoScreen.SetActive(true);
 	}
+
+	//hide the gallery
 	public void HideGalleryEntry(){
 		infoScreen.SetActive(false);
 	}

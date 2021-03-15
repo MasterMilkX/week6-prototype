@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        moveSpeed = 6f;
+        //moveSpeed = 6f;
         rb = GetComponent<Rigidbody2D>();
         gameLogic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
 
@@ -63,11 +63,11 @@ public class Player : MonoBehaviour
 
 
         //take pic and add to gallery
-        if(Input.GetMouseButtonUp(0) && srScript.Hit() && srScript.squirrel != null && srScript.squirrel.GetComponent<SquirrelAi>().eating){
-            //Debug.Log("Click!");
+        if(Input.GetMouseButtonUp(0) && srScript.Hit() && srScript.squirrel != null){
+            Debug.Log("Click!");
             //Debug.Log(srScript.squirrel.GetComponent<SquirrelAi>().id);
             SquirrelAi sqai = srScript.squirrel.GetComponent<SquirrelAi>();
-            gameLogic.AddSquirrel(sqai.id,sqai.color,sqai.defaultBehavior,sqai.noise,sqai.playerBehavior,"likes acorns");
+            gameLogic.AddSquirrel(sqai.id,sqai.color,sqai.defaultBehavior,sqai.noise,sqai.playerBehavior,"likes acorns",sqai.upright);
         }
 
         //show snap ring
@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
 
         if (Input.GetMouseButtonDown(1) && gameLogic.acornCt > 0)
-            ThrowAcorn(direction);
+            ThrowAcorn(direction,targetPos);
 
         Vector2 changePos = movement * moveSpeed * Time.deltaTime;
 
@@ -105,10 +105,12 @@ public class Player : MonoBehaviour
     }
     
 
-    void ThrowAcorn(Vector2 target){
+    void ThrowAcorn(Vector2 target,Vector2 pos){
         float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
         GameObject p = Instantiate(acornPrefab, new Vector2(transform.position.x,transform.position.y) + 1f * target, Quaternion.identity);
-        p.GetComponent<Rigidbody2D>().AddForce(target*10.0f,ForceMode2D.Impulse);
+        //Debug.Log();
+        float d = Vector2.Distance(transform.position,pos);
+        p.GetComponent<Rigidbody2D>().AddForce(target*d*2.0f,ForceMode2D.Impulse);
         gameLogic.DecreaseAcorns();
     }
 }

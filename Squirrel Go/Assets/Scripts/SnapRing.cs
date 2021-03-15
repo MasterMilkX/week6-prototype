@@ -23,9 +23,11 @@ public class SnapRing : MonoBehaviour
         	RingScale();
         }
 
+        
         if(!this.gameObject.activeSelf){
         	squirrel = null;
         }
+        
     }
 
     //shrink the ring
@@ -40,7 +42,8 @@ public class SnapRing : MonoBehaviour
     		if(Hit()){
     			innerRingColor.color = new Color(0, 74, 255);
     		}else{
-				innerRingColor.color = new Color(255,50,0);
+    			innerRingColor.color = new Color(255,50,0);
+				
     		}
 		}else{
 			innerRingColor.color = new Color(255,0,0);
@@ -49,7 +52,7 @@ public class SnapRing : MonoBehaviour
 
     //if able to snap picture when ring is within the size
     public bool Hit(){
-    	return Mathf.Abs(transform.localScale.x - curSize) < 0.35;
+    	return Mathf.Abs(1.0f - curSize) < 0.35;
     }
 
     //hover over squirrel
