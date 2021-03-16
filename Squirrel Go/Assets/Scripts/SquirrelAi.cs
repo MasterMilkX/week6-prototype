@@ -31,12 +31,19 @@ public class SquirrelAi : MonoBehaviour
     public Sprite upright;
     public bool eating = false;
 
+    //sounds
+    public AudioSource aud;
+    public AudioClip kukSound;
+    public AudioClip quaaSound;
+
 
     // Start is called before the first frame update
     void Start()
     {
         SetRandomPos(Random.Range(2.0f,10.0f));
         sprRend = GetComponent<SpriteRenderer>();
+        aud = GetComponent<AudioSource>();
+        InvokeRepeating("MakeSound", Random.Range(2.0f,5.0f), Random.Range(2.0f,5.0f));
     }
 
     // Update is called once per frame
@@ -184,6 +191,16 @@ public class SquirrelAi : MonoBehaviour
         if(age == "Juvenile"){
             def_speed = 3.0f;
             run_speed = 5f;
+        }
+    }
+
+    public void MakeSound(){
+        if(noise == "kuks"){
+            aud.clip = kukSound;
+            aud.Play();
+        }else if(noise == "quaas"){
+            aud.clip = quaaSound;
+            aud.Play();
         }
     }
 }

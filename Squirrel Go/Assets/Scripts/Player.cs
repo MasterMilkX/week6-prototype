@@ -107,11 +107,11 @@ public class Player : MonoBehaviour
 
 
         //take pic and add to gallery
-        if(Input.GetMouseButtonUp(0) && srScript.Hit() && srScript.squirrel != null){
+        if(Input.GetMouseButtonUp(0) && srScript.Hit() && srScript.squirrel != null && srScript.squirrel.GetComponent<SquirrelAi>().eating){
             Debug.Log("Click!");
             //Debug.Log(srScript.squirrel.GetComponent<SquirrelAi>().id);
             SquirrelAi sqai = srScript.squirrel.GetComponent<SquirrelAi>();
-            gameLogic.AddSquirrel(sqai.id,sqai.color,sqai.defaultBehavior,sqai.noise,sqai.playerBehavior,"likes acorns",sqai.upright);
+            gameLogic.AddSquirrel(sqai.id,sqai.color,sqai.defaultBehavior,sqai.noise,sqai.playerBehavior,FunFact(),sqai.upright);
         }
 
         //show snap ring
@@ -156,5 +156,11 @@ public class Player : MonoBehaviour
         float d = Vector2.Distance(transform.position,pos);
         p.GetComponent<Rigidbody2D>().AddForce(target*d*2.0f,ForceMode2D.Impulse);
         gameLogic.DecreaseAcorns();
+    }
+
+    //makes a random fun fact
+    string FunFact(){
+        string[] facts = {"likes acorns", "begs for food", "can do backflips", "walks on water", "can opera sing", "fights pigeons", "likes cheeseballs", "steal sandwiches", "photogenic", "has a twin"};
+        return facts[Random.Range(0,facts.Length-1)];
     }
 }

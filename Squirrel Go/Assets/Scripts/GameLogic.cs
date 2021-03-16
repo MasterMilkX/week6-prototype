@@ -36,13 +36,15 @@ public class GameLogic : MonoBehaviour
 
 	System.Random random = new System.Random();
 
+	public AudioSource bgm;
+
 	void Awake()
 	{
 		List<Dictionary<string, object>> data = CSVReader.Read(file); //read map values
 
-		GameObject newsquirrel;
+		GameObject newsquirrel;;
 
-		for (var i = 0; i < data.Count; i+=20)	//currently this just spawns every 20th squirrel since i tried spawning them in at once and that was a huge mistake
+		for (var i = Random.Range(0,30); i < data.Count; i+=20)	//currently this just spawns every 20th squirrel since i tried spawning them in at once and that was a huge mistake
 		{
 
 			Vector3 pos = new Vector3( ( (float) data[i]["X"] - TRANSLATEX) * SCALE, ((float) data[i]["Y"] - TRANSLATEY) * SCALE, 0);	//get position of squirrel and transform
@@ -140,7 +142,9 @@ public class GameLogic : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
+		if(Input.GetKeyDown("m")){
+			bgm.volume = (bgm.volume == 0.05f ? 0f : 0.05f);
+		}
 	}
 
 	public void DecreaseAcorns(){
