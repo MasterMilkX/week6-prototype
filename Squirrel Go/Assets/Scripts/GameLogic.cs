@@ -33,6 +33,11 @@ public class GameLogic : MonoBehaviour
 	public List<Dictionary<string,string>> squirrelSet = new List<Dictionary<string,string>>(); 
 	public GameObject infoScreen;
 	public List<string> savedSquirrels = new List<string>();
+	public Sprite empty;
+
+	public int squirrelsFound = 0;
+	public Text camTxt;
+	int totSquirrels = 0;
 
 	System.Random random = new System.Random();
 
@@ -107,6 +112,8 @@ public class GameLogic : MonoBehaviour
 					"ID " + data[i]["Unique Squirrel ID"] + " " +
 					"Hectare " + data[i]["Hectare"]);
 			*/
+
+			totSquirrels++;
 		}
 
 	}
@@ -159,6 +166,10 @@ public class GameLogic : MonoBehaviour
 			return;
 		}
 
+		if(squirrelSet.Count == 9){
+			ResetDex();
+		}
+
 		savedSquirrels.Add(id);
 
 		Dictionary<string,string> sq = new Dictionary<string,string>();
@@ -170,11 +181,20 @@ public class GameLogic : MonoBehaviour
 		sq.Add("fun_fact", funfact);
 
 		squirrelSet.Add(sq);
-		Debug.Log(squirrelSet.Count);
+		//Debug.Log(squirrelSet.Count);
 
-		if(squirrelSet.Count < 10){
-			GameObject.Find("Pic" + squirrelSet.Count).GetComponent<Image>().sprite = sprite;
+		GameObject.Find("Pic" + squirrelSet.Count).GetComponent<Image>().sprite = sprite;
+		
+		squirrelsFound++;
+		camTxt.text = "x" + squirrelsFound.ToString();
+
+	}
+
+	public void ResetDex(){
+		for(int i=1;i<=9;i++){
+			GameObject.Find("Pic" + i).GetComponent<Image>().sprite = empty;
 		}
+		squirrelSet = new List<Dictionary<string,string>>(); 
 	}
 
 	//show the entry 
