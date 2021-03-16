@@ -185,7 +185,7 @@ public class GameLogic : MonoBehaviour
 		infoScreen.transform.Find("ID").GetComponent<Text>().text = sq["id"];
 		infoScreen.transform.Find("Pic").GetComponent<Image>().sprite = GameObject.Find("Pic" + entry).GetComponent<Image>().sprite;
 		infoScreen.transform.Find("Activity").GetComponent<Text>().text = "Fave Activity: " + sq["fav_activity"];
-		infoScreen.transform.Find("Noise").GetComponent<Text>().text = "Noise: " + sq["id"];
+		infoScreen.transform.Find("Noise").GetComponent<Text>().text = "Noise: " + sq["noise"];
 		infoScreen.transform.Find("Humans").GetComponent<Text>().text = "Humans: " + sq["humans"];
 		infoScreen.transform.Find("Fun Fact").GetComponent<Text>().text = "Fun Fact: " + sq["fun_fact"];
 

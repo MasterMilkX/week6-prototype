@@ -18,6 +18,11 @@ public class Player : MonoBehaviour
     //acorn and camera movement
     public GameObject acornPrefab;
 
+    //sprite animation
+    public string dir = "down";
+    public string secdir = "";
+    public SpriteAnimator sprAnim;
+
 
     //picture mode
     public bool picMode = false;
@@ -34,6 +39,8 @@ public class Player : MonoBehaviour
             srScript = snapRing.GetComponent<SnapRing>();
             snapRing.SetActive(false);
         }
+
+        sprAnim = GetComponent<SpriteAnimator>();
     }
 
     // Update is called once per frame
@@ -48,14 +55,51 @@ public class Player : MonoBehaviour
         movement.y = 0;
         if(Input.GetKey("a")){
             movement.x = -1;
+            if(dir == ""){
+                dir = "left";
+            }else{
+                secdir = "left";
+            }
         }else if(Input.GetKey("d")){
             movement.x = 1;
+            if(dir == ""){
+                dir = "right";
+            }else{
+                secdir = "right";
+            }
         }
 
         if(Input.GetKey("w")){
             movement.y = 1;
+            if(dir == ""){
+                dir = "up";
+            }else{
+                secdir = "up";
+            }
         }else if(Input.GetKey("s")){
             movement.y = -1;
+            if(dir == ""){
+                dir = "down";
+            }else{
+                secdir = "down";
+            }
+        }
+
+        //override direction
+        if((dir == "down" && !Input.GetKey("s")) || (dir == "up" && !Input.GetKey("w")) || (dir == "left" && !Input.GetKey("a")) || (dir == "right" && !Input.GetKey("d"))){
+            dir = secdir;
+            secdir = "";
+        }
+
+        if(movement != Vector2.zero){
+            sprAnim.animating = true;
+            sprAnim.PlayAnim("move_"+dir);
+        }else{
+            if(dir != ""){
+                sprAnim.PlayAnim("idle_"+dir);
+                sprAnim.animating = false;
+                dir = "";
+            }
         }
 
         Vector2 mousePos = Input.mousePosition;
