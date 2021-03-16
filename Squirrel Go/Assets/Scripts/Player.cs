@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
     public GameObject snapRing;
     public SnapRing srScript;
 
+
+    [SerializeField] Transform SpawnPoints;
     void Awake()
     {
         //moveSpeed = 6f;

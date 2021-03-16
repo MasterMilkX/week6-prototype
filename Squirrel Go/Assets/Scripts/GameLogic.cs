@@ -43,11 +43,15 @@ public class GameLogic : MonoBehaviour
 
 	public AudioSource bgm;
 
+	[SerializeField] Transform SpawnPoints;
+	[SerializeField] Transform Player;
+	
+
 	void Awake()
 	{
 		List<Dictionary<string, object>> data = CSVReader.Read(file); //read map values
 
-		GameObject newsquirrel;;
+		GameObject newsquirrel;
 
 		for (var i = Random.Range(0,30); i < data.Count; i+=20)	//currently this just spawns every 20th squirrel since i tried spawning them in at once and that was a huge mistake
 		{
@@ -116,6 +120,7 @@ public class GameLogic : MonoBehaviour
 			totSquirrels++;
 		}
 
+		Player.position = SpawnPoints.GetChild(random.Next(0, SpawnPoints.childCount)).position;
 	}
 
 

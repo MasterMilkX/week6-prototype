@@ -6,6 +6,7 @@ TagManager:
   tags:
   - acorn
   - squirrel
+  - Spawn
   layers:
   - Default
   - TransparentFX
